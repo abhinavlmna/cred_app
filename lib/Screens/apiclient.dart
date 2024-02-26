@@ -36,6 +36,6 @@ class Apiclient {
     }
   }
 
-  // Future<dynamic> put(String api) async {}
-  // Future<dynamic> delete(String api) async {}
+  Future<dynamic> put(String api) async {}
+  Future<dynamic> delete(String api) async {}
 }

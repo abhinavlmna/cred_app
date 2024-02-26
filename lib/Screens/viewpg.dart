@@ -15,9 +15,7 @@ class Listtitle {
 }
 
 class Viewdetails extends StatefulWidget {
-  final Listtitle userData;
-
-  const Viewdetails({required this.userData});
+  Viewdetails();
 
   @override
   State<Viewdetails> createState() => _ViewdetailsState();
@@ -45,30 +43,27 @@ class _ViewdetailsState extends State<Viewdetails> {
         title: Text('View all users'),
         backgroundColor: Colors.greenAccent,
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 100,
-            child: ListView.separated(
-              itemBuilder: (BuildContext context, int index) {
-                Listtitle response = tilelist[index];
-                return Column(
-                  children: [
-                    Text('${response.name}'),
-                    Text('${response.phone}'),
-                    Text('${response.age}'),
-                    Text('${response.place}'),
-                    Text('${response.address}'),
-                  ],
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider();
-              },
-              itemCount: tilelist.length,
+      body: ListView.separated(
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          Listtitle response = tilelist[index];
+          return Container(
+            height: 200,
+            child: Column(
+              children: [
+                Text('${response.name}'),
+                Text('${response.phone}'),
+                Text('${response.age}'),
+                Text('${response.place}'),
+                Text('${response.address}'),
+              ],
             ),
-          )
-        ],
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Divider();
+        },
+        itemCount: tilelist.length,
       ),
     );
   }
