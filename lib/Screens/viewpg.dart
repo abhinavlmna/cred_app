@@ -23,18 +23,18 @@ class Viewdetails extends StatefulWidget {
 
 class _ViewdetailsState extends State<Viewdetails> {
   List<Listtitle> tilelist = [
-    Listtitle(
-        name: 'Abhinav',
-        phone: 7025911389,
-        age: 20,
-        place: 'kochi',
-        address: 'kerala'),
-    Listtitle(
-        name: 'Abhinav',
-        phone: 7025911389,
-        age: 20,
-        place: 'kochi',
-        address: 'kerala'),
+    // Listtitle(
+    //     name: 'Abhinav',
+    //     phone: 7025911389,
+    //     age: 20,
+    //     place: 'kochi',
+    //     address: 'kerala'),
+    // Listtitle(
+    //     name: 'Abhinav',
+    //     phone: 7025911389,
+    //     age: 20,
+    //     place: 'kochi',
+    //     address: 'kerala'),
   ];
   @override
   Widget build(BuildContext context) {

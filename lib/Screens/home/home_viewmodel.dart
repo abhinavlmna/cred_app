@@ -11,16 +11,16 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../app/utils.dart';
 
 class HomeViewModel extends BaseViewModel {
-  //List<Products> plist = [];
+  // List<Products> plist = [];
   Future<void> loaddata() async {
     print("calling api");
-    var response = await Apiclient().get('/user/list');
+    var response = await Apiclient().get('user/list');
     response = jsonDecode(response);
 
     print(response.data);
 
     // plist = api.Loaddata();
-    // notifyListeners();
+    notifyListeners();
   }
 
   final name = TextEditingController();
@@ -36,9 +36,10 @@ class HomeViewModel extends BaseViewModel {
       "place": place.text,
       "address": address.text
     };
-    // print(UserData);
+    print('page called');
+
     var response = await Apiclient()
-        .post('/user/create', UserData)
+        .post('user/create', UserData)
         .then((value) => {navigationService.navigateTo(Routes.viewdetails)});
   }
 }

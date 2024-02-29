@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:cred_app/Screens/apiclient.dart';
+import 'package:cred_app/Screens/details/detail_view.dart';
 import 'package:cred_app/Screens/donepg.dart';
 import 'package:cred_app/Screens/viewpg.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -92,14 +94,19 @@ class HomeView extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            // var response = await Apiclient().get('/user/list');
-                            // response = jsonDecode(response);
-
+                            print('object');
+                            var response = await Apiclient()
+                                .get('/user/list')
+                                .catchError((err) {
+                              print(err);
+                            });
+                            if (response == null) return;
+                            print(response);
                             // print(response.data);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Viewdetails()));
+                                    builder: (context) => DetailView()));
                           },
                           child: Text('View all users'),
                         ),
