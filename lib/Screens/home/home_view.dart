@@ -4,6 +4,8 @@ import 'package:cred_app/Screens/apiclient.dart';
 import 'package:cred_app/Screens/details/detail_view.dart';
 import 'package:cred_app/Screens/donepg.dart';
 import 'package:cred_app/Screens/viewpg.dart';
+import 'package:cred_app/app/app.router.dart';
+import 'package:cred_app/app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -94,19 +96,16 @@ class HomeView extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            print('object');
+                            model.navv();
+                            print('calling');
                             var response = await Apiclient()
-                                .get('/user/list')
+                                .get('user/list')
                                 .catchError((err) {
                               print(err);
                             });
                             if (response == null) return;
-                            print(response);
+                            print(response) as List;
                             // print(response.data);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailView()));
                           },
                           child: Text('View all users'),
                         ),
@@ -114,11 +113,26 @@ class HomeView extends StatelessWidget {
                           width: 70,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Donepage()));
+                          onPressed: () async {
+                            var UserData = {
+                              "name": model.name.text,
+                              "phone": model.phone.text,
+                              "age": model.age.text,
+                              "place": model.place.text,
+                              "address": model.address.text
+                            };
+                            var response = await Apiclient()
+                                .post('user/create', UserData)
+                                .then((value) => {
+                                      navigationService
+                                          .navigateTo(Routes.donepage)
+                                    });
+                            print('api  called');
+                            model.nav2();
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Donepage()));
                           },
                           child: Text('Submit'),
                         ),

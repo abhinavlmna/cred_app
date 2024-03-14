@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:cred_app/Screens/apiclient.dart';
 import 'package:cred_app/Screens/details/detail_viewmodel.dart';
 import 'package:cred_app/Screens/donepg.dart';
+import 'package:cred_app/Screens/model/Person.dart';
 import 'package:cred_app/Screens/viewpg.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -11,57 +13,95 @@ import '../../app/image_constant.dart';
 
 import 'detail_view.dart';
 
-class Listtitle {
-  late String name;
-  late int phone;
-  late int age;
-  late String place;
-  late String address;
-  Listtitle(
-      {required this.name,
-      required this.phone,
-      required this.age,
-      required this.place,
-      required this.address});
-}
-
 class DetailView extends StatefulWidget {
-  DetailView({Key? key}) : super(key: key);
+  DetailView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DetailView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<DetailView> {
-  List<Listtitle> tilelist = [
-    // Listtitle(
-    //     name: 'Abhinav',
-    //     phone: 7025911389,
-    //     age: 20,
-    //     place: 'kochi',
-    //     address: 'kerala'),
-    // Listtitle(
-    //     name: 'Abhinav',
-    //     phone: 7025911389,
-    //     age: 20,
-    //     place: 'kochi',
-    //     address: 'kerala'),
-  ];
+  final namealert = TextEditingController();
+  final phonealert = TextEditingController();
+  final agealert = TextEditingController();
+  final placealert = TextEditingController();
+  final addressalert = TextEditingController();
+  _displayDialog(BuildContext context, Response s) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Edit Data'),
+            content: Column(
+              children: [
+                TextField(
+                  controller: namealert,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Name',
+                  ),
+                ),
+                TextField(
+                  controller: phonealert,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Phonenumber',
+                  ),
+                ),
+                TextField(
+                  controller: agealert,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Age',
+                  ),
+                ),
+                TextField(
+                  controller: addressalert,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Address',
+                  ),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () async {
+                    var response = await Apiclient().put('user/edit', {
+                      "userId": '${s.id}',
+                      "name": namealert.text,
+                      "phone": phonealert.text,
+                      "age": agealert.text,
+                      "place": placealert.text,
+                      "address": addressalert.text
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Submit'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DetailViewModel>.reactive(
         viewModelBuilder: () => DetailViewModel(),
-        onViewModelReady: (model) {},
+        onViewModelReady: (model) {
+          model.loaddata();
+        },
         builder: (context, model, child) {
           return Scaffold(
             appBar: AppBar(
               title: Text('View all users'),
-              backgroundColor: Colors.greenAccent,
+              backgroundColor: Color.fromARGB(255, 181, 105, 240),
             ),
             body: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                Listtitle response = tilelist[index];
+                Response response = model.users![index];
                 return Container(
                   height: 200,
                   child: Column(
@@ -71,6 +111,40 @@ class _HomeViewState extends State<DetailView> {
                       Text('${response.age}'),
                       Text('${response.place}'),
                       Text('${response.address}'),
+                      Padding(
+                        padding: const EdgeInsets.only(),
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  Response response = model.users![index];
+                                  var userId = response.id;
+                                  print(userId);
+                                  _displayDialog(context, response);
+                                },
+                                icon: Icon(Icons.edit)),
+                            IconButton(
+                                onPressed: () async {
+                                  Response response = model.users![index];
+                                  var r = await Apiclient().delete(
+                                      'user/delete', {
+                                    "userId": response.id
+                                  }).catchError((err) {
+                                    print(err);
+                                  });
+                                  var rr = await Apiclient()
+                                      .get('user/list')
+                                      .catchError((err) {
+                                    print(err);
+                                  });
+                                  if (r == null) return;
+                                  print(response) as List;
+                                  // debugPrint('successful');
+                                },
+                                icon: Icon(Icons.delete)),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 );
@@ -78,7 +152,7 @@ class _HomeViewState extends State<DetailView> {
               separatorBuilder: (BuildContext context, int index) {
                 return Divider();
               },
-              itemCount: tilelist.length,
+              itemCount: model.users!.length,
             ),
           );
         });

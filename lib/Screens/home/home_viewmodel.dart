@@ -12,16 +12,16 @@ import '../../app/utils.dart';
 
 class HomeViewModel extends BaseViewModel {
   // List<Products> plist = [];
-  Future<void> loaddata() async {
-    print("calling api");
-    var response = await Apiclient().get('user/list');
-    response = jsonDecode(response);
+  // Future<void> loaddata() async {
+  //   print("calling api");
+  //   var response = await Apiclient().get('user/list');
+  //   response = jsonDecode(response);
 
-    print(response.data);
+  //   print(response.data);
 
-    // plist = api.Loaddata();
-    notifyListeners();
-  }
+  //   // plist = api.Loaddata();
+  //   notifyListeners();
+  // }
 
   final name = TextEditingController();
   final phone = TextEditingController();
@@ -29,17 +29,28 @@ class HomeViewModel extends BaseViewModel {
   final place = TextEditingController();
   final address = TextEditingController();
   Future<void> submit() async {
-    var UserData = {
-      "name": name.text,
-      "phone": phone.text,
-      "age": age.text,
-      "place": place.text,
-      "address": address.text
-    };
-    print('page called');
+    print('button 1');
+    // var UserData = {
+    //   "name": name.text,
+    //   "phone": phone.text,
+    //   "age": age.text,
+    //   "place": place.text,
+    //   "address": address.text
+    // };
 
-    var response = await Apiclient()
-        .post('user/create', UserData)
-        .then((value) => {navigationService.navigateTo(Routes.viewdetails)});
+    print('button');
+
+    // var response = await Apiclient()
+    //     .post('user/create', UserData)
+    //     .then((value) => {navigationService.navigateTo(Routes.donepage)});
+    // print('api  called');
+  }
+
+  void navv() {
+    navigationService.navigateTo(Routes.detailView);
+  }
+
+  void nav2() {
+    navigationService.navigateTo(Routes.donepage);
   }
 }
